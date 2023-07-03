@@ -12,6 +12,13 @@ const httpError = (code, response, message) => {
   response.end(message);
 };
 
+const OkCode = {
+  GET: 200,
+  POST: 201,
+  PUT: 200,
+  DELETE: 204,
+};
+
 const server = createServer(async (req, res) => {
   const url = req.url;
   console.log(
@@ -26,7 +33,9 @@ const server = createServer(async (req, res) => {
 
   try {
     const data = await handler(req);
-    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.writeHead(OkCode[req.method] ?? 200, {
+      'Content-Type': 'application/json',
+    });
     res.end(JSON.stringify(data));
   } catch (err) {
     if (err instanceof ServerError) {
